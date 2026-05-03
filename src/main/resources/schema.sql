@@ -1,5 +1,4 @@
 create user if not exists viking_user password 'viking_password';
-
 grant all on schema public to viking_user;
 
 create table if not exists vikings (
@@ -17,11 +16,6 @@ create table if not exists equipment_items (
     viking_id bigint not null,
     name varchar(255) not null,
     quality varchar(100),
-
     constraint fk_equipment_viking
-        foreign key (viking_id)
-        references vikings(id)
-        on delete cascade
+        foreign key (viking_id) references vikings(id) on delete cascade
 );
-
-

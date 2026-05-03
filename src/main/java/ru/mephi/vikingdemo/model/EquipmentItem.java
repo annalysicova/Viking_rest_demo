@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record EquipmentItem(
         @Schema(description = "Название предмета", example = "Iron Axe")
         String name,
+
         @Schema(description = "Редкость или качество", example = "Rare")
         String quality
 ) {

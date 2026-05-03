@@ -2,38 +2,43 @@ package ru.mephi.vikingdemo.service;
 
 import org.springframework.stereotype.Service;
 import ru.mephi.vikingdemo.model.Viking;
+import ru.mephi.vikingdemo.repository.VikingStorage;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.mephi.vikingdemo.repository.VikingStorage;
+import java.util.Optional;
 
 @Service
 public class VikingService {
-    // каждый раз при изменении создаётся новая копия списка 
 
     private final VikingFactory vikingFactory;
     private final VikingStorage vikingStorage;
-    
-    
-    @Autowired
-    public VikingService(
-            VikingFactory vikingFactory,
-            VikingStorage vikingStorage
-    ) {
+
+    public VikingService(VikingFactory vikingFactory, VikingStorage vikingStorage) {
         this.vikingFactory = vikingFactory;
         this.vikingStorage = vikingStorage;
     }
-    
+
     public List<Viking> findAll() {
         return vikingStorage.findAll();
     }
 
-    public Viking createRandomViking() {
-        Viking viking = vikingFactory.createRandomViking();
+    public Optional<Viking> findById(int id) {
+        return vikingStorage.findById(id);
+    }
+
+    public Viking create(Viking viking) {
         return vikingStorage.save(viking);
     }
-    public void deleteById(int id) {
-        vikingStorage.deleteById(id);
+
+    public Viking createRandomViking() {
+        return create(vikingFactory.createRandomViking());
+    }
+
+    public Optional<Viking> replace(int id, Viking viking) {
+        return vikingStorage.replace(id, viking);
+    }
+
+    public boolean deleteById(int id) {
+        return vikingStorage.deleteById(id);
     }
 }

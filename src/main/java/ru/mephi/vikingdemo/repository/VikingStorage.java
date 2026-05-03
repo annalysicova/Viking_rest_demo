@@ -1,8 +1,5 @@
 package ru.mephi.vikingdemo.repository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mephi.vikingdemo.model.EquipmentItem;
@@ -10,6 +7,10 @@ import ru.mephi.vikingdemo.model.EquipmentItemEntity;
 import ru.mephi.vikingdemo.model.Viking;
 import ru.mephi.vikingdemo.model.VikingEntity;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class VikingStorage {
@@ -30,17 +31,9 @@ public class VikingStorage {
 
     @Transactional
     public Viking save(Viking viking) {
-        Integer vikingId = vikingRepository.save(
-                vikingMapper.toVikingEntity(viking)
-        );
-
-        for (EquipmentItem item : viking.equipment()) {
-            equipmentItemRepository.save(
-                    vikingMapper.toEquipmentItemEntity(vikingId, item)
-            );
-        }
-
-        return viking;
+        Integer vikingId = vikingRepository.save(vikingMapper.toVikingEntity(viking));
+        saveEquipment(vikingId, viking.equipment());
+        return findById(vikingId).orElseThrow();
     }
 
     public List<Viking> findAll() {
@@ -58,8 +51,39 @@ public class VikingStorage {
                 .toList();
     }
 
+    public Optional<Viking> findById(int id) {
+        return vikingRepository.findById(id)
+                .map(entity -> vikingMapper.toViking(entity, equipmentItemRepository.findByVikingId(id)));
+    }
+
     @Transactional
-    public void deleteById(int id) {
+    public Optional<Viking> replace(int id, Viking viking) {
+        if (vikingRepository.findById(id).isEmpty()) {
+            return Optional.empty();
+        }
+
+        vikingRepository.update(vikingMapper.toVikingEntity(id, viking));
+        equipmentItemRepository.deleteByVikingId(id);
+        saveEquipment(id, viking.equipment());
+
+        return findById(id);
+    }
+
+    @Transactional
+    public boolean deleteById(int id) {
+        if (vikingRepository.findById(id).isEmpty()) {
+            return false;
+        }
         vikingRepository.deleteById(id);
+        return true;
+    }
+
+    private void saveEquipment(Integer vikingId, List<EquipmentItem> equipment) {
+        if (equipment == null) {
+            return;
+        }
+        for (EquipmentItem item : equipment) {
+            equipmentItemRepository.save(vikingMapper.toEquipmentItemEntity(vikingId, item));
+        }
     }
 }

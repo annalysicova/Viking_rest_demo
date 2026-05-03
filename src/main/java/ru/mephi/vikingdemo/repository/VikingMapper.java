@@ -13,7 +13,19 @@ public class VikingMapper {
 
     public VikingEntity toVikingEntity(Viking viking) {
         return new VikingEntity(
-                null,
+                viking.id(),
+                viking.name(),
+                viking.age(),
+                viking.heightCm(),
+                viking.hairColor(),
+                viking.beardStyle(),
+                ""
+        );
+    }
+
+    public VikingEntity toVikingEntity(int id, Viking viking) {
+        return new VikingEntity(
+                id,
                 viking.name(),
                 viking.age(),
                 viking.heightCm(),
@@ -24,19 +36,11 @@ public class VikingMapper {
     }
 
     public EquipmentItemEntity toEquipmentItemEntity(Integer vikingId, EquipmentItem item) {
-        return new EquipmentItemEntity(
-                null,
-                vikingId,
-                item.name(),
-                item.quality()
-        );
+        return new EquipmentItemEntity(null, vikingId, item.name(), item.quality());
     }
 
     public EquipmentItem toEquipmentItem(EquipmentItemEntity entity) {
-        return new EquipmentItem(
-                entity.name(),
-                entity.quality()
-        );
+        return new EquipmentItem(entity.name(), entity.quality());
     }
 
     public Viking toViking(VikingEntity entity, List<EquipmentItemEntity> equipmentEntities) {
@@ -45,6 +49,7 @@ public class VikingMapper {
                 .toList();
 
         return new Viking(
+                entity.id(),
                 entity.name(),
                 entity.age(),
                 entity.heightCm(),

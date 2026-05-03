@@ -15,7 +15,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
 
-
 public class VikingDesktopFrame extends JFrame {
 
     private final VikingService vikingService;
@@ -44,25 +43,33 @@ public class VikingDesktopFrame extends JFrame {
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(createButton);
         add(bottomPanel, BorderLayout.SOUTH);
-        
+
         onInit();
     }
 
     private void onCreateViking() {
         Viking viking = vikingService.createRandomViking();
-        tableModel.addViking(viking);
+        addOrUpdateViking(viking);
     }
-    
-    public void addNewViking(Viking viking){
-        tableModel.addViking(viking);
+
+    public void addNewViking(Viking viking) {
+        addOrUpdateViking(viking);
+    }
+
+    public void addOrUpdateViking(Viking viking) {
+        tableModel.addOrUpdateViking(viking);
+    }
+
+    public void removeViking(int id) {
+        tableModel.removeVikingById(id);
+    }
+
+    public void refreshVikings() {
+        tableModel.setVikings(vikingService.findAll());
     }
 
     private void onInit() {
         List<Viking> all = vikingService.findAll();
-        if (!all.isEmpty()){
-            for (Viking viking : all) {
-                tableModel.addViking(viking);
-            }
-        }
+        tableModel.setVikings(all);
     }
 }

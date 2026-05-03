@@ -13,6 +13,6 @@ public class OpenApiConfig {
         return new OpenAPI().info(new Info()
                 .title("Viking Demo API")
                 .version("1.0.0")
-                .description("Демонстрационное REST API для списка созданных викингов"));
+                .description("REST API для создания, чтения, обновления и удаления викингов"));
     }
 }

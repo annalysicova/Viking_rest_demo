@@ -1,15 +1,15 @@
-
 package ru.mephi.vikingdemo.service;
 
-import java.util.List;
-import java.util.Random;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 import ru.mephi.vikingdemo.model.BeardStyle;
 import ru.mephi.vikingdemo.model.EquipmentItem;
 import ru.mephi.vikingdemo.model.HairColor;
 import ru.mephi.vikingdemo.model.Viking;
+
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 @Component
 public class VikingFactory {
@@ -19,6 +19,7 @@ public class VikingFactory {
 
     public Viking createRandomViking() {
         return new Viking(
+                null,
                 faker.name().firstName(),
                 18 + random.nextInt(43),
                 160 + random.nextInt(41),
