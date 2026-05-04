@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: REST API для работы с таблицей викингов
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8081
     description: Локальный сервер разработки
 paths:
   /api/vikings:
